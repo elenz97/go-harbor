@@ -1,9 +1,9 @@
 package harbor
 
 import (
-	"time"
-	"github.com/parnurzeal/gorequest"
 	"fmt"
+	"github.com/parnurzeal/gorequest"
+	"time"
 )
 
 // ProjectMetadata holds the metadata of a project.
@@ -19,16 +19,16 @@ type ProjectMetadata struct {
 
 // Project holds the details of a project.
 type Project struct {
-	ProjectID    int64             `json:"project_id"`
-	OwnerID      int               `json:"owner_id"`
-	Name         string            `json:"name"`
-	CreationTime time.Time         `json:"creation_time"`
-	UpdateTime   time.Time         `json:"update_time"`
-	Deleted      int               `json:"deleted"`
-	OwnerName    string            `json:"owner_name"`
-	Togglable    bool              `json:"togglable"`
-	Role         int               `json:"current_user_role_id"`
-	RepoCount    int64             `json:"repo_count"`
+	ProjectID    int64           `json:"project_id"`
+	OwnerID      int             `json:"owner_id"`
+	Name         string          `json:"name"`
+	CreationTime time.Time       `json:"creation_time"`
+	UpdateTime   time.Time       `json:"update_time"`
+	Deleted      int             `json:"deleted"`
+	OwnerName    string          `json:"owner_name"`
+	Togglable    bool            `json:"togglable"`
+	Role         int             `json:"current_user_role_id"`
+	RepoCount    int64           `json:"repo_count"`
 	Metadata     ProjectMetadata `json:"metadata"`
 }
 
@@ -89,13 +89,13 @@ type ProjectsService struct {
 // and can be filtered by project name.
 //
 // Harbor API docs: https://github.com/vmware/harbor/blob/release-1.4.0/docs/swagger.yaml#L46
-func (s *ProjectsService) ListProject(opt *ListProjectsOptions) ([]Project, *gorequest.Response, []error) {
-	var projects []Project
+func (s *ProjectsService) ListProject(opt *ListProjectsOptions) (Project, *gorequest.Response, []error) {
+	var project Project
 	resp, _, errs := s.client.
 		NewRequest(gorequest.GET, "projects").
 		Query(*opt).
-		EndStruct(&projects)
-	return projects, &resp, errs
+		EndStruct(&project)
+	return project, &resp, errs
 }
 
 // Check if the project name user provided already exists.
