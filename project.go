@@ -12,8 +12,6 @@ type ProjectMetadata struct {
 	ProjectID    int64     `json:"project_id"`
 	Name         string    `json:"name"`
 	Value        string    `json:"value"`
-	CreationTime time.Time `json:"creation_time"`
-	UpdateTime   time.Time `json:"update_time"`
 	Deleted      int       `json:"deleted"`
 }
 
@@ -22,8 +20,6 @@ type Project struct {
 	ProjectID    int64           `json:"project_id"`
 	OwnerID      int             `json:"owner_id"`
 	Name         string          `json:"name"`
-	CreationTime time.Time       `json:"creation_time"`
-	UpdateTime   time.Time       `json:"update_time"`
 	Deleted      int             `json:"deleted"`
 	OwnerName    string          `json:"owner_name"`
 	Togglable    bool            `json:"togglable"`
@@ -95,6 +91,7 @@ func (s *ProjectsService) ListProject(opt *ListProjectsOptions) (Project, *goreq
 		NewRequest(gorequest.GET, "projects").
 		Query(*opt).
 		EndStruct(&project)
+
 	return project, &resp, errs
 }
 
@@ -254,8 +251,6 @@ type User struct {
 	HasAdminRole int       `json:"has_admin_role"`
 	ResetUUID    string    `json:"reset_uuid"`
 	Salt         string    `json:"-"`
-	CreationTime time.Time `json:"creation_time"`
-	UpdateTime   time.Time `json:"update_time"`
 }
 
 // Return a project's relevant role members.
