@@ -3,31 +3,44 @@ package harbor
 import (
 	"fmt"
 	"github.com/parnurzeal/gorequest"
+	"github.com/rogpeppe/go-internal/fmtsort"
 	"time"
 )
 
 // ProjectMetadata holds the metadata of a project.
 type ProjectMetadata struct {
-	ID           int64     `json:"id"`
-	ProjectID    int64     `json:"project_id"`
-	Name         string    `json:"name"`
-	Value        string    `json:"value"`
-	Deleted      int       `json:"deleted"`
+	ID        int64  `json:"id"`
+	ProjectID int64  `json:"project_id"`
+	Name      string `json:"name"`
+	Value     string `json:"value"`
+	Deleted   int    `json:"deleted"`
 }
 
 // Project holds the details of a project.
 type Project struct {
-	ProjectID    int64             `json:"project_id"`
-	OwnerID      int               `json:"owner_id"`
-	Name         string            `json:"name"`
-	CreationTime time.Time         `json:"creation_time"`
-	UpdateTime   time.Time         `json:"update_time"`
-	Deleted      int               `json:"deleted"`
-	OwnerName    string            `json:"owner_name"`
-	Toggleable    bool              `json:"toggleable"`
-	Role         int               `json:"current_user_role_id"`
-	RepoCount    int64             `json:"repo_count"`
-	Metadata     map[string]string `json:"metadata"`
+	ProjectID    int64              `json:"project_id"`
+	OwnerID      int                `json:"owner_id"`
+	Name         string             `json:"name"`
+	CreationTime time.Time          `json:"creation_time"`
+	UpdateTime   time.Time          `json:"update_time"`
+	Deleted      int                `json:"deleted"`
+	OwnerName    string             `json:"owner_name"`
+	Toggleable   bool               `json:"toggleable"`
+	Role         int                `json:"current_user_role_id"`
+	RepoCount    int64              `json:"repo_count"`
+	Metadata     *fmtsort.SortedMap `json:"metadata"`
+	CVEWhitelist CVEWhitelist       `json:"CVEWhitelist"`
+	StorageLimit int64              `json:"storageLimit"`
+}
+
+type CVEWhitelistItem struct {
+	CVEID string `json:"CVEID"`
+}
+
+type CVEWhitelist struct {
+	ID        int64            `json:"id"`
+	ProjectID int64            `json:"projectID"`
+	Items     CVEWhitelistItem `json:"items,optional"`
 }
 
 // AccessLog holds information about logs which are used to record the actions that user take to the resourses.
@@ -44,9 +57,9 @@ type AccessLog struct {
 
 // ProjectRequest holds informations that need for creating project API
 type ProjectRequest struct {
-	Name     string            `url:"name,omitempty" json:"project_name"`
-	Public   *int              `url:"public,omitempty" json:"public"` //deprecated, reserved for project creation in replication
-	Metadata map[string]string `url:"-" json:"metadata"`
+	Name     string             `url:"name,omitempty" json:"project_name"`
+	Public   *int               `url:"public,omitempty" json:"public"` //deprecated, reserved for project creation in replication
+	Metadata *fmtsort.SortedMap `url:"-" json:"metadata"`
 }
 
 type ListProjectsOptions struct {
@@ -239,19 +252,19 @@ func (s *ProjectsService) DeleteProjectMetadata(pid int64, metadataName string) 
 
 // User holds the details of a user.
 type User struct {
-	UserID       int       `json:"user_id"`
-	Username     string    `json:"username"`
-	Email        string    `json:"email"`
-	Password     string    `json:"password"`
-	Realname     string    `json:"realname"`
-	Comment      string    `json:"comment"`
-	Deleted      int       `json:"deleted"`
-	Rolename     string    `json:"role_name"`
-	Role         int       `json:"role_id"`
-	RoleList     []Role    `json:"role_list"`
-	HasAdminRole int       `json:"has_admin_role"`
-	ResetUUID    string    `json:"reset_uuid"`
-	Salt         string    `json:"-"`
+	UserID       int    `json:"user_id"`
+	Username     string `json:"username"`
+	Email        string `json:"email"`
+	Password     string `json:"password"`
+	Realname     string `json:"realname"`
+	Comment      string `json:"comment"`
+	Deleted      int    `json:"deleted"`
+	Rolename     string `json:"role_name"`
+	Role         int    `json:"role_id"`
+	RoleList     []Role `json:"role_list"`
+	HasAdminRole int    `json:"has_admin_role"`
+	ResetUUID    string `json:"reset_uuid"`
+	Salt         string `json:"-"`
 }
 
 // Return a project's relevant role members.
