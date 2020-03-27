@@ -17,15 +17,17 @@ type ProjectMetadata struct {
 
 // Project holds the details of a project.
 type Project struct {
-	ProjectID    int64           `json:"project_id"`
-	OwnerID      int             `json:"owner_id"`
-	Name         string          `json:"name"`
-	Deleted      int             `json:"deleted"`
-	OwnerName    string          `json:"owner_name"`
-	Togglable    bool            `json:"togglable"`
-	Role         int             `json:"current_user_role_id"`
-	RepoCount    int64           `json:"repo_count"`
-	Metadata     ProjectMetadata `json:"metadata"`
+	ProjectID    int64             `json:"project_id"`
+	OwnerID      int               `json:"owner_id"`
+	Name         string            `json:"name"`
+	CreationTime time.Time         `json:"creation_time"`
+	UpdateTime   time.Time         `json:"update_time"`
+	Deleted      int               `json:"deleted"`
+	OwnerName    string            `json:"owner_name"`
+	Toggleable    bool              `json:"toggleable"`
+	Role         int               `json:"current_user_role_id"`
+	RepoCount    int64             `json:"repo_count"`
+	Metadata     map[string]string `json:"metadata"`
 }
 
 // AccessLog holds information about logs which are used to record the actions that user take to the resourses.
@@ -91,7 +93,6 @@ func (s *ProjectsService) ListProject(opt *ListProjectsOptions) (Project, *goreq
 		NewRequest(gorequest.GET, "projects").
 		Query(*opt).
 		EndStruct(&project)
-
 	return project, &resp, errs
 }
 
