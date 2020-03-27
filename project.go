@@ -87,13 +87,13 @@ type ProjectsService struct {
 // and can be filtered by project name.
 //
 // Harbor API docs: https://github.com/vmware/harbor/blob/release-1.4.0/docs/swagger.yaml#L46
-func (s *ProjectsService) ListProject(opt *ListProjectsOptions) (Project, *gorequest.Response, []error) {
-	var project Project
+func (s *ProjectsService) ListProject(opt *ListProjectsOptions) ([]Project, *gorequest.Response, []error) {
+	var projects []Project
 	resp, _, errs := s.client.
 		NewRequest(gorequest.GET, "projects").
 		Query(*opt).
-		EndStruct(&project)
-	return project, &resp, errs
+		EndStruct(&projects)
+	return projects, &resp, errs
 }
 
 // Check if the project name user provided already exists.
