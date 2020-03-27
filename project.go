@@ -3,7 +3,6 @@ package harbor
 import (
 	"fmt"
 	"github.com/parnurzeal/gorequest"
-	"github.com/rogpeppe/go-internal/fmtsort"
 	"time"
 )
 
@@ -18,19 +17,19 @@ type ProjectMetadata struct {
 
 // Project holds the details of a project.
 type Project struct {
-	ProjectID    int64              `json:"project_id"`
-	OwnerID      int                `json:"owner_id"`
-	Name         string             `json:"name"`
-	CreationTime time.Time          `json:"creation_time"`
-	UpdateTime   time.Time          `json:"update_time"`
-	Deleted      int                `json:"deleted"`
-	OwnerName    string             `json:"owner_name"`
-	Toggleable   bool               `json:"toggleable"`
-	Role         int                `json:"current_user_role_id"`
-	RepoCount    int64              `json:"repo_count"`
-	Metadata     *fmtsort.SortedMap `json:"metadata"`
-	CVEWhitelist CVEWhitelist       `json:"CVEWhitelist"`
-	StorageLimit int64              `json:"storageLimit"`
+	ProjectID    int64             `json:"project_id"`
+	OwnerID      int               `json:"owner_id"`
+	Name         string            `json:"name"`
+	CreationTime time.Time         `json:"creation_time"`
+	UpdateTime   time.Time         `json:"update_time"`
+	Deleted      int               `json:"deleted"`
+	OwnerName    string            `json:"owner_name"`
+	Toggleable   bool              `json:"toggleable"`
+	Role         int               `json:"current_user_role_id"`
+	RepoCount    int64             `json:"repo_count"`
+	Metadata     map[string]string `json:"metadata"`
+	CVEWhitelist CVEWhitelist      `json:"CVEWhitelist"`
+	StorageLimit int64 			   `json:"storageLimit"`
 }
 
 type CVEWhitelistItem struct {
@@ -57,9 +56,9 @@ type AccessLog struct {
 
 // ProjectRequest holds informations that need for creating project API
 type ProjectRequest struct {
-	Name     string             `url:"name,omitempty" json:"project_name"`
-	Public   *int               `url:"public,omitempty" json:"public"` //deprecated, reserved for project creation in replication
-	Metadata *fmtsort.SortedMap `url:"-" json:"metadata"`
+	Name     string            `url:"name,omitempty" json:"project_name"`
+	Public   *int              `url:"public,omitempty" json:"public"` //deprecated, reserved for project creation in replication
+	Metadata map[string]string `url:"-" json:"metadata"`
 }
 
 type ListProjectsOptions struct {
