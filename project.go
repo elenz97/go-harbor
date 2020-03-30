@@ -249,23 +249,6 @@ func (s *ProjectsService) DeleteProjectMetadata(pid int64, metadataName string) 
 	return &resp, errs
 }
 
-// User holds the details of a user.
-type User struct {
-	UserID       int    `json:"user_id"`
-	Username     string `json:"username"`
-	Email        string `json:"email"`
-	Password     string `json:"password"`
-	Realname     string `json:"realname"`
-	Comment      string `json:"comment"`
-	Deleted      int    `json:"deleted"`
-	Rolename     string `json:"role_name"`
-	Role         int    `json:"role_id"`
-	RoleList     []Role `json:"role_list"`
-	HasAdminRole int    `json:"has_admin_role"`
-	ResetUUID    string `json:"reset_uuid"`
-	Salt         string `json:"-"`
-}
-
 // Return a project's relevant role members.
 //
 // This endpoint is for user to search a specified project’s relevant role members.
@@ -286,7 +269,7 @@ func (s *ProjectsService) GetProjectMembers(pid int64) ([]User, *gorequest.Respo
 // Harbor API docs: https://github.com/vmware/harbor/blob/release-1.4.0/docs/swagger.yaml#L483
 func (s *ProjectsService) AddProjectMember(pid int64, member MemberRequest) (*gorequest.Response, []error) {
 	resp, _, errs := s.client.
-		NewRequest(gorequest.POST, fmt.Sprintf("projects/%d/metadatas", pid)).
+		NewRequest(gorequest.POST, fmt.Sprintf("projects/%d/members", pid)).
 		Send(member).
 		End()
 	return &resp, errs
