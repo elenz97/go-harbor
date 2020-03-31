@@ -23,23 +23,19 @@ type User struct {
 }
 
 type UserRequest struct {
-	Username     string      `json:"username"`
-	UserProfile  UserProfile `json:"userprofile"`
-	Password     string      `json:"password"`
-	Role         int         `json:"role_id"`
-	HasAdminRole bool        `json:"has_admin_role"`
-	UserID       int         `json:"user_id,omitempty"`
-}
-
-type UserProfile struct {
-	Email    string `json:"email"`
-	RealName string `json:"realname"`
-	Comment  string `json:"comment,omitempty"`
+	Username     string `json:"username"`
+	Password     string `json:"password"`
+	Email        string `json:"email"`
+	RealName     string `json:"realname"`
+	Comment      string `json:"comment,omitempty"`
+	Role         int    `json:"role_id"`
+	HasAdminRole bool   `json:"has_admin_role"`
+	UserID       int    `json:"user_id,omitempty"`
 }
 
 type ChangePassword struct {
-	OldPassword string      `json:"old_password"`
-	NewPassword string      `json:"new_password"`
+	OldPassword string `json:"old_password"`
+	NewPassword string `json:"new_password"`
 }
 
 // Add a user
