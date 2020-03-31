@@ -23,18 +23,84 @@ type User struct {
 }
 
 type UserRequest struct {
-	Username     string `json:"username"`
-	Email        string `json:"email"`
-	Password     string `json:"password"`
-	RealName     string `json:"realname"`
-	Role         int    `json:"role_id"`
-	HasAdminRole bool   `json:"has_admin_role"`
+	Username     string      `json:"username"`
+	UserProfile  UserProfile `json:"userprofile"`
+	Password     string      `json:"password"`
+	Role         int         `json:"role_id"`
+	HasAdminRole bool        `json:"has_admin_role"`
+	UserID       int         `json:"user_id,omitempty"`
+}
+
+type UserProfile struct {
+	Email    string `json:"email"`
+	RealName string `json:"realname"`
+	Comment  string `json:"comment,omitempty"`
+}
+
+type ChangePassword struct {
+	OldPassword string      `json:"old_password"`
+	NewPassword string      `json:"new_password"`
 }
 
 // Add a user
 func (s *ProjectsService) AddUser(usr UserRequest) (*gorequest.Response, []error) {
 	resp, _, errs := s.client.
 		NewRequest(gorequest.POST, fmt.Sprintf("users")).
+		Send(usr).
+		End()
+	return &resp, errs
+}
+
+// Get a user's profile by ID
+func (s *ProjectsService) GetUser(usr UserRequest) (*gorequest.Response, []error) {
+	resp, _, errs := s.client.
+		NewRequest(gorequest.GET, fmt.Sprintf("users/%d", usr.UserID)).
+		End()
+	return &resp, errs
+}
+
+// Search User searches for a user by name
+func (s *ProjectsService) SearchUser(usr UserRequest) (*gorequest.Response, []error) {
+	resp, _, errs := s.client.
+		NewRequest(gorequest.GET, fmt.Sprintf("users/search/%s", usr.Username)).
+		End()
+	return &resp, errs
+}
+
+// Delete a user
+func (s *ProjectsService) DeleteUser(usr UserRequest) (*gorequest.Response, []error) {
+	resp, _, errs := s.client.
+		NewRequest(gorequest.DELETE, fmt.Sprintf("users/%d", usr.UserID)).
+		End()
+	return &resp, errs
+}
+
+// Toggle administrator
+func (s *ProjectsService) ToggleUserSysAdmin(usr UserRequest) (*gorequest.Response, []error) {
+	resp, _, errs := s.client.
+		NewRequest(gorequest.PUT, fmt.Sprintf("users/%d/sysadmin", usr.UserID)).
+		Send(usr.HasAdminRole).
+		End()
+	return &resp, errs
+}
+
+// Update a user's password
+func (s *ProjectsService) UpdateUserPassword(oldUsr, newUsr UserRequest) (*gorequest.Response, []error) {
+	cp := ChangePassword{
+		OldPassword: oldUsr.Password,
+		NewPassword: newUsr.Password,
+	}
+	resp, _, errs := s.client.
+		NewRequest(gorequest.PUT, fmt.Sprintf("users/%d/password", oldUsr.UserID)).
+		Send(cp).
+		End()
+	return &resp, errs
+}
+
+// Update a user's profile
+func (s *ProjectsService) UpdateUserProfile(usr UserRequest) (*gorequest.Response, []error) {
+	resp, _, errs := s.client.
+		NewRequest(gorequest.PUT, fmt.Sprintf("users/%d", usr.UserID)).
 		Send(usr).
 		End()
 	return &resp, errs
