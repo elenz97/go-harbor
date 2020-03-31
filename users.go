@@ -63,7 +63,7 @@ func (s *ProjectsService) GetUser(usr UserRequest) (*gorequest.Response, []error
 func (s *ProjectsService) SearchUser(usr UserRequest) (*gorequest.Response, []error) {
 	resp, _, errs := s.client.
 		NewRequest(gorequest.GET, fmt.Sprintf("users/search/%s", usr.Username)).
-		End()
+		EndStruct(&UserRequest{})
 	return &resp, errs
 }
 
