@@ -85,6 +85,16 @@ type MemberRequest struct {
 	Roles    []int  `json:"roles"`
 }
 
+type ProjectMemberRequest struct {
+	RoleID      int         `json:"role_id"`
+	MemberUser  MemberUser  `json:"member_user"`
+}
+
+type MemberUser struct {
+	Username string `json:"username"`
+	UserID   int    `json:"user_id"`
+}
+
 // ProjectsService handles communication with the user related methods of
 // the Harbor API.
 //
