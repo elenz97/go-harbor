@@ -38,7 +38,7 @@ type ChangePassword struct {
 	NewPassword string `json:"new_password"`
 }
 
-type UserSearchResult []struct {
+type UserSearchResult struct {
 	UserID   int    `json:"user_id"`
 	Username string `json:"username"`
 }
@@ -64,7 +64,7 @@ func (s *ProjectsService) GetUser(usr UserRequest) (*gorequest.Response, []error
 func (s *ProjectsService) SearchUser(usr UserRequest) (*gorequest.Response, []error) {
 	resp, _, errs := s.client.
 		NewRequest(gorequest.GET, fmt.Sprintf("users/search?username=%s", usr.Username)).
-		EndStruct(&UserSearchResult{})
+		EndStruct(&[]UserSearchResult{})
 	return &resp, errs
 }
 
