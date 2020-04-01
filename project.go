@@ -269,7 +269,7 @@ func (s *ProjectsService) GetProjectMembers(pid int64) ([]User, *gorequest.Respo
 // Harbor API docs: https://github.com/vmware/harbor/blob/release-1.4.0/docs/swagger.yaml#L483
 func (s *ProjectsService) AddProjectMember(pid, mid int64, member MemberRequest) (*gorequest.Response, []error) {
 	resp, _, errs := s.client.
-		NewRequest(gorequest.POST, fmt.Sprintf("projects/%d/members/%d", pid, mid)).
+		NewRequest(gorequest.PUT, fmt.Sprintf("projects/%d/members/%d", pid, mid)).
 		Send(member.Roles).
 		End()
 	return &resp, errs
