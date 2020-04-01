@@ -286,7 +286,7 @@ func (s *ProjectsService) UpdateProjectMember(pid, mid int64, member MemberReque
 // This endpoint is for user to add project role member accompany with relevant project and user.
 //
 // Harbor API docs: https://github.com/vmware/harbor/blob/release-1.4.0/docs/swagger.yaml#L483
-func (s *ProjectsService) AddProjectMember(pid int, member MemberRequest) (*gorequest.Response, []error) {
+func (s *ProjectsService) AddProjectMember(pid int, member ProjectMemberRequest) (*gorequest.Response, []error) {
 	resp, _, errs := s.client.
 		NewRequest(gorequest.POST, fmt.Sprintf("projects/%d/members", pid)).
 		Send(member).
