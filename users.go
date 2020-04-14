@@ -13,7 +13,7 @@ type User struct {
 	Password     string `json:"password"`
 	RealName     string `json:"realname"`
 	Comment      string `json:"comment"`
-	Deleted      int    `json:"deleted"`
+	Deleted      bool   `json:"deleted"`
 	Rolename     string `json:"role_name"`
 	Role         int    `json:"role_id"`
 	RoleList     []Role `json:"role_list"`

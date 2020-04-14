@@ -12,7 +12,7 @@ type ProjectMetadata struct {
 	ProjectID int64  `json:"project_id"`
 	Name      string `json:"name"`
 	Value     string `json:"value"`
-	Deleted   int    `json:"deleted"`
+	Deleted   bool   `json:"deleted"`
 }
 
 // Project holds the details of a project.
@@ -22,14 +22,14 @@ type Project struct {
 	Name         string            `json:"name"`
 	CreationTime time.Time         `json:"creation_time"`
 	UpdateTime   time.Time         `json:"update_time"`
-	Deleted      int               `json:"deleted"`
+	Deleted      bool              `json:"deleted"`
 	OwnerName    string            `json:"owner_name"`
 	Toggleable   bool              `json:"toggleable"`
 	Role         int               `json:"current_user_role_id"`
 	RepoCount    int64             `json:"repo_count"`
 	Metadata     map[string]string `json:"metadata"`
 	CVEWhitelist CVEWhitelist      `json:"CVEWhitelist"`
-	StorageLimit int64 			   `json:"storageLimit"`
+	StorageLimit int64             `json:"storageLimit"`
 }
 
 type CVEWhitelistItem struct {
@@ -86,8 +86,8 @@ type MemberRequest struct {
 }
 
 type ProjectMemberRequest struct {
-	RoleID      int         `json:"role_id"`
-	MemberUser  MemberUser  `json:"member_user"`
+	RoleID     int        `json:"role_id"`
+	MemberUser MemberUser `json:"member_user"`
 }
 
 type MemberUser struct {
@@ -272,7 +272,6 @@ func (s *ProjectsService) GetProjectMembers(pid int64) ([]User, *gorequest.Respo
 	return users, &resp, errs
 }
 
-
 func (s *ProjectsService) UpdateProjectMember(pid, mid int64, member MemberRequest) (*gorequest.Response, []error) {
 	resp, _, errs := s.client.
 		NewRequest(gorequest.PUT, fmt.Sprintf("projects/%d/members/%d", pid, mid)).
@@ -293,6 +292,7 @@ func (s *ProjectsService) AddProjectMember(pid int, member ProjectMemberRequest)
 		End()
 	return &resp, errs
 }
+
 // Role holds the details of a role.
 type Role struct {
 	RoleID   int    `json:"role_id"`
