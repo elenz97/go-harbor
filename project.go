@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-// ProjectsService handles communication with the project related methods of the Harbor API.
+// ProjectClient handles communication with the project related methods of the Harbor API.
 type ProjectClient struct {
 	client *Client
 }
@@ -116,7 +116,7 @@ type MemberUser struct {
 //
 // This endpoint returns all projects created by Harbor,
 // and can be filtered by project name.
-func (s *ProjectsService) ListProject(opt *ListProjectsOptions) ([]Project, gorequest.Response, []error) {
+func (s *ProjectClient) ListProject(opt *ListProjectsOptions) ([]Project, gorequest.Response, []error) {
 	var projects []Project
 	resp, _, errs := s.client.
 		NewRequest(gorequest.GET, "projects").
@@ -127,7 +127,7 @@ func (s *ProjectsService) ListProject(opt *ListProjectsOptions) ([]Project, gore
 
 // CheckProject
 // Check if the project name user provided already exist
-func (s *ProjectsService) CheckProject(projectName string) (gorequest.Response, []error) {
+func (s *ProjectClient) CheckProject(projectName string) (gorequest.Response, []error) {
 	resp, _, errs := s.client.
 		NewRequest(gorequest.HEAD, "projects").
 		Query(fmt.Sprintf("project_name=%s", projectName)).
@@ -137,7 +137,7 @@ func (s *ProjectsService) CheckProject(projectName string) (gorequest.Response, 
 
 // CreateProject
 // Creates a new project
-func (s *ProjectsService) CreateProject(p ProjectRequest) (gorequest.Response, []error) {
+func (s *ProjectClient) CreateProject(p ProjectRequest) (gorequest.Response, []error) {
 	resp, _, errs := s.client.
 		NewRequest(gorequest.POST, "projects").
 		Send(p).
@@ -147,7 +147,7 @@ func (s *ProjectsService) CreateProject(p ProjectRequest) (gorequest.Response, [
 
 // GetProjectByID
 // Return specific project details
-func (s *ProjectsService) GetProjectByID(pid int64) (Project, gorequest.Response, []error) {
+func (s *ProjectClient) GetProjectByID(pid int64) (Project, gorequest.Response, []error) {
 	var project Project
 	resp, _, errs := s.client.
 		NewRequest(gorequest.GET, fmt.Sprintf("projects/%d", pid)).
@@ -157,7 +157,7 @@ func (s *ProjectsService) GetProjectByID(pid int64) (Project, gorequest.Response
 
 // UpdateProject
 // Update the properties of a project.
-func (s *ProjectsService) UpdateProject(pid int64, p Project) (gorequest.Response, []error) {
+func (s *ProjectClient) UpdateProject(pid int64, p Project) (gorequest.Response, []error) {
 	resp, _, errs := s.client.
 		NewRequest(gorequest.PUT, fmt.Sprintf("projects/%d", pid)).
 		Send(p).
@@ -167,7 +167,7 @@ func (s *ProjectsService) UpdateProject(pid int64, p Project) (gorequest.Respons
 
 // DeleteProject
 // Delete a project by project ID.
-func (s *ProjectsService) DeleteProject(pid int64) (gorequest.Response, []error) {
+func (s *ProjectClient) DeleteProject(pid int64) (gorequest.Response, []error) {
 	resp, _, errs := s.client.
 		NewRequest(gorequest.DELETE, fmt.Sprintf("projects/%d", pid)).
 		End()
@@ -176,7 +176,7 @@ func (s *ProjectsService) DeleteProject(pid int64) (gorequest.Response, []error)
 
 // GetProjectLogByID
 // Get access logs of a project with user-specified filter operations and date time ranges
-func (s *ProjectsService) GetProjectLogByID(pid int64, opt ListLogOptions) ([]AccessLog, gorequest.Response, []error) {
+func (s *ProjectClient) GetProjectLogByID(pid int64, opt ListLogOptions) ([]AccessLog, gorequest.Response, []error) {
 	var accessLog []AccessLog
 	resp, _, errs := s.client.
 		NewRequest(gorequest.GET, fmt.Sprintf("projects/%d", pid)).
@@ -187,7 +187,7 @@ func (s *ProjectsService) GetProjectLogByID(pid int64, opt ListLogOptions) ([]Ac
 
 // GetProjectMetadataById
 // Get the metadata of a project
-func (s *ProjectsService) GetProjectMetadataById(pid int64) (map[string]string, gorequest.Response, []error) {
+func (s *ProjectClient) GetProjectMetadataById(pid int64) (map[string]string, gorequest.Response, []error) {
 	var metadata map[string]string
 	resp, _, errs := s.client.
 		NewRequest(gorequest.GET, fmt.Sprintf("projects/%d", pid)).
@@ -197,7 +197,7 @@ func (s *ProjectsService) GetProjectMetadataById(pid int64) (map[string]string, 
 
 // AddProjectMetadata
 // Add metadata to a project
-func (s *ProjectsService) AddProjectMetadata(pid int64, metadata map[string]string) (gorequest.Response, []error) {
+func (s *ProjectClient) AddProjectMetadata(pid int64, metadata map[string]string) (gorequest.Response, []error) {
 	resp, _, errs := s.client.
 		NewRequest(gorequest.POST, fmt.Sprintf("projects/%d/metadatas", pid)).
 		Send(metadata).
@@ -207,7 +207,7 @@ func (s *ProjectsService) AddProjectMetadata(pid int64, metadata map[string]stri
 
 // GetProjectMetadata
 // Get the specified metadata value of a project
-func (s *ProjectsService) GetProjectMetadata(pid int64, specified string) (map[string]string, gorequest.Response, []error) {
+func (s *ProjectClient) GetProjectMetadata(pid int64, specified string) (map[string]string, gorequest.Response, []error) {
 	var metadata map[string]string
 	resp, _, errs := s.client.
 		NewRequest(gorequest.GET, fmt.Sprintf("projects/%d/metadatas/%s", pid, specified)).
@@ -217,7 +217,7 @@ func (s *ProjectsService) GetProjectMetadata(pid int64, specified string) (map[s
 
 // UpdateProjectMetadata
 // Update the metadata of a project.
-func (s *ProjectsService) UpdateProjectMetadata(pid int64, metadataName string) (gorequest.Response, []error) {
+func (s *ProjectClient) UpdateProjectMetadata(pid int64, metadataName string) (gorequest.Response, []error) {
 	resp, _, errs := s.client.
 		NewRequest(gorequest.PUT, fmt.Sprintf("projects/%d/%s", pid, metadataName)).
 		End()
@@ -226,7 +226,7 @@ func (s *ProjectsService) UpdateProjectMetadata(pid int64, metadataName string) 
 
 // DeleteProjectMetadata
 // Delete a specified metadata value of a project.
-func (s *ProjectsService) DeleteProjectMetadata(pid int64, metadataName string) (gorequest.Response, []error) {
+func (s *ProjectClient) DeleteProjectMetadata(pid int64, metadataName string) (gorequest.Response, []error) {
 	resp, _, errs := s.client.
 		NewRequest(gorequest.DELETE, fmt.Sprintf("projects/%d/%s", pid, metadataName)).
 		End()
@@ -235,7 +235,7 @@ func (s *ProjectsService) DeleteProjectMetadata(pid int64, metadataName string) 
 
 // GetProjectMembers
 // Get the specified project’s members
-func (s *ProjectsService) GetProjectMembers(pid int64) ([]User, gorequest.Response, []error) {
+func (s *ProjectClient) GetProjectMembers(pid int64) ([]User, gorequest.Response, []error) {
 	var users []User
 	resp, _, errs := s.client.
 		NewRequest(gorequest.GET, fmt.Sprintf("projects/%d/members", pid)).
@@ -245,7 +245,7 @@ func (s *ProjectsService) GetProjectMembers(pid int64) ([]User, gorequest.Respon
 
 // UpdateProjectMember
 // Update a project member
-func (s *ProjectsService) UpdateProjectMember(pid, mid int64, member MemberRequest) (gorequest.Response, []error) {
+func (s *ProjectClient) UpdateProjectMember(pid, mid int64, member MemberRequest) (gorequest.Response, []error) {
 	resp, _, errs := s.client.
 		NewRequest(gorequest.PUT, fmt.Sprintf("projects/%d/members/%d", pid, mid)).
 		Send(member.Roles).
@@ -257,7 +257,7 @@ func (s *ProjectsService) UpdateProjectMember(pid, mid int64, member MemberReque
 //
 // This endpoint is for user to add project role member accompany with relevant project and user.
 //
-func (s *ProjectsService) AddProjectMember(pid int, member ProjectMemberRequest) (gorequest.Response, []error) {
+func (s *ProjectClient) AddProjectMember(pid int, member ProjectMemberRequest) (gorequest.Response, []error) {
 	resp, _, errs := s.client.
 		NewRequest(gorequest.POST, fmt.Sprintf("projects/%d/members", pid)).
 		Send(member).
@@ -269,7 +269,7 @@ func (s *ProjectsService) AddProjectMember(pid int, member ProjectMemberRequest)
 // Get the role of a project member
 //
 // Harbor API docs: https://github.com/vmware/harbor/blob/release-1.4.0/docs/swagger.yaml#L522
-func (s *ProjectsService) GetProjectMemberRole(pid, mid int) (Role, gorequest.Response, []error) {
+func (s *ProjectClient) GetProjectMemberRole(pid, mid int) (Role, gorequest.Response, []error) {
 	var role Role
 	resp, _, errs := s.client.
 		NewRequest(gorequest.GET, fmt.Sprintf("projects/%d/members/%d", pid, mid)).
@@ -279,7 +279,7 @@ func (s *ProjectsService) GetProjectMemberRole(pid, mid int) (Role, gorequest.Re
 
 // UpdateProjectMemberRole
 // Update a project members role
-func (s *ProjectsService) UpdateProjectMemberRole(pid, uid int, role MemberRequest) (gorequest.Response, []error) {
+func (s *ProjectClient) UpdateProjectMemberRole(pid, uid int, role MemberRequest) (gorequest.Response, []error) {
 	resp, _, errs := s.client.
 		NewRequest(gorequest.PUT, fmt.Sprintf("projects/%d/members/%d", pid, uid)).
 		Send(role).
@@ -289,7 +289,7 @@ func (s *ProjectsService) UpdateProjectMemberRole(pid, uid int, role MemberReque
 
 // DeleteProjectMember
 // Delete a project member
-func (s *ProjectsService) DeleteProjectMember(pid, mid int64) (gorequest.Response, []error) {
+func (s *ProjectClient) DeleteProjectMember(pid, mid int64) (gorequest.Response, []error) {
 	resp, _, errs := s.client.
 		NewRequest(gorequest.DELETE, fmt.Sprintf("projects/%d/members/%d", pid, mid)).
 		End()
