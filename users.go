@@ -38,6 +38,10 @@ type ChangePassword struct {
 	NewPassword string `json:"new_password"`
 }
 
+type ChangePasswordAsAdmin struct {
+	NewPassword string `json:"new_password"`
+}
+
 type UserSearchResult []struct {
 	UserID   int    `json:"user_id"`
 	Username string `json:"username"`
@@ -93,6 +97,18 @@ func (s *ProjectsService) UpdateUserPassword(oldUsr, newUsr UserRequest) (*goreq
 	}
 	resp, _, errs := s.client.
 		NewRequest(gorequest.PUT, fmt.Sprintf("users/%d/password", oldUsr.UserID)).
+		Send(cp).
+		End()
+	return &resp, errs
+}
+
+// Update a user's password as admin (only usable by an admin user)
+func (s *ProjectsService) UpdateUserPasswordAsAdmin(newUsr UserRequest) (*gorequest.Response, []error) {
+	cp := ChangePasswordAsAdmin{
+		NewPassword: newUsr.Password,
+	}
+	resp, _, errs := s.client.
+		NewRequest(gorequest.PUT, fmt.Sprintf("users/%d/password", newUsr.UserID)).
 		Send(cp).
 		End()
 	return &resp, errs
