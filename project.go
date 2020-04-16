@@ -44,6 +44,10 @@ type Role struct {
 	RoleMask int    `json:"role_mask"`
 }
 
+type RoleRequest struct {
+	Role int64 `json:"role"`
+}
+
 // CVEWhitelistItem holds the CVE ids of a whitelisted item
 type CVEWhitelistItem struct {
 	CVEID string `json:"CVEID"`
@@ -245,10 +249,10 @@ func (s *ProjectClient) GetProjectMembers(pid int64) ([]User, gorequest.Response
 
 // UpdateProjectMember
 // Update a project member
-func (s *ProjectClient) UpdateProjectMember(pid, mid int64, member MemberRequest) (gorequest.Response, []error) {
+func (s *ProjectClient) UpdateProjectMember(pid, mid int64, role RoleRequest) (gorequest.Response, []error) {
 	resp, _, errs := s.client.
 		NewRequest(gorequest.PUT, fmt.Sprintf("projects/%d/members/%d", pid, mid)).
-		Send(member.Roles).
+		Send(role).
 		End()
 	return resp, errs
 }
@@ -277,15 +281,7 @@ func (s *ProjectClient) GetProjectMemberRole(pid, mid int) (Role, gorequest.Resp
 	return role, resp, errs
 }
 
-// UpdateProjectMemberRole
-// Update a project members role
-func (s *ProjectClient) UpdateProjectMemberRole(pid, uid int, role MemberRequest) (gorequest.Response, []error) {
-	resp, _, errs := s.client.
-		NewRequest(gorequest.PUT, fmt.Sprintf("projects/%d/members/%d", pid, uid)).
-		Send(role).
-		End()
-	return resp, errs
-}
+
 
 // DeleteProjectMember
 // Delete a project member
