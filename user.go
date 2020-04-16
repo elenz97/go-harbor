@@ -52,7 +52,10 @@ type ChangePasswordAsAdmin struct {
 }
 
 // UserSearchResult holds the information returned by the API when querying for a user name
-type UserSearchResult []struct {
+
+type UserSearchResults []UserSearchResult
+
+type UserSearchResult struct {
 	UserID   int    `json:"user_id"`
 	Username string `json:"username"`
 }
@@ -69,20 +72,22 @@ func (s *UserClient) AddUser(usr UserRequest) (gorequest.Response, []error) {
 
 // GetUser
 // Get a user's profile by ID
-func (s *UserClient) GetUser(usr UserRequest) (gorequest.Response, []error) {
+func (s *UserClient) GetUser(usr UserRequest) (User, gorequest.Response, []error) {
+	var u User
 	resp, _, errs := s.client.
 		NewRequest(gorequest.GET, fmt.Sprintf("users/%d", usr.UserID)).
-		End()
-	return resp, errs
+		EndStruct(&u)
+	return u, resp, errs
 }
 
 // SearchUser
 // Search User searches for a user by name
-func (s *UserClient) SearchUser(usr UserRequest) (gorequest.Response, []error) {
+func (s *UserClient) SearchUser(usr UserRequest) (UserSearchResults, gorequest.Response, []error) {
+	var u UserSearchResults
 	resp, _, errs := s.client.
 		NewRequest(gorequest.GET, fmt.Sprintf("users/search?username=%s", usr.Username)).
-		EndStruct(&UserSearchResult{})
-	return resp, errs
+		EndStruct(&u)
+	return u, resp, errs
 }
 
 // DeleteUser

@@ -4,6 +4,8 @@ A Harbor API client enabling Go programs to perform CRUD operations on [goharbor
 
 [![GitHub license](https://img.shields.io/github/license/elenz97/go-harbor.svg)](https://github.com/elenz97/go-harbor/blob/master/LICENSE)
 
+This library is mainly build upon `goharbor/v1.10.1`
+
 ## Usage
 
 Initialize a new go-harbor client, then use the various services on the client to
