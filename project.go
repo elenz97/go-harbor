@@ -22,7 +22,7 @@ type ProjectMetadata struct {
 // Project holds the details of a project.
 type Project struct {
 	ProjectID    int64             `json:"project_id"`
-	OwnerID      int               `json:"owner_id"`
+	OwnerID      int64             `json:"owner_id"`
 	Name         string            `json:"name"`
 	CreationTime time.Time         `json:"creation_time"`
 	UpdateTime   time.Time         `json:"update_time"`
@@ -141,12 +141,20 @@ func (s *ProjectClient) CheckProject(projectName string) (gorequest.Response, []
 
 // CreateProject
 // Creates a new project
-func (s *ProjectClient) CreateProject(p ProjectRequest) (gorequest.Response, []error) {
-	resp, _, errs := s.client.
+func (s *ProjectClient) CreateProject(p ProjectRequest) (gorequest.Response, error) {
+	resp, _, err := s.client.
 		NewRequest(gorequest.POST, "projects").
 		Send(p).
 		End()
-	return resp, errs
+
+	if err != nil {
+		return nil, err[len(err)-1]
+	}
+	if resp.StatusCode != 200 {
+		return nil, fmt.Errorf("API returned %d when deleting repository", resp.StatusCode)
+	}
+	return resp, nil
+
 }
 
 // GetProjectByID
@@ -171,11 +179,17 @@ func (s *ProjectClient) UpdateProject(pid int64, p Project) (gorequest.Response,
 
 // DeleteProject
 // Delete a project by project ID.
-func (s *ProjectClient) DeleteProject(pid int64) (gorequest.Response, []error) {
-	resp, _, errs := s.client.
+func (s *ProjectClient) DeleteProject(pid int64) (gorequest.Response, error) {
+	resp, _, err := s.client.
 		NewRequest(gorequest.DELETE, fmt.Sprintf("projects/%d", pid)).
 		End()
-	return resp, errs
+	if err != nil {
+		return nil, err[len(err)-1]
+	}
+	if resp.StatusCode != 200 {
+		return nil, fmt.Errorf("API returned %d when deleting repository", resp.StatusCode)
+	}
+	return resp, nil
 }
 
 // GetProjectLogByID
