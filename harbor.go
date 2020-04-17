@@ -18,6 +18,8 @@ type Client struct {
 	baseURL *url.URL
 	// User agent used when communicating with the Harbor API
 	UserAgent string
+	// XSRFKey used when communicating with the Harbor API
+	XSRFKey string
 	// Services used for talking to different parts of the Harbor API
 	Projects     *ProjectClient
 	Repositories *RepositoryClient
@@ -73,9 +75,14 @@ func newClient(harborClient *gorequest.SuperAgent, baseURL, username, password s
 // Relative URL paths should always be specified without a preceding slash. If
 // specified, the value pointed to by body is JSON encoded and included as the
 // request body.
-func (c *Client) NewRequest(method, subPath string) *gorequest.SuperAgent {
+func (c *Client) NewRequest(method, subPath, xsrfCookie string) *gorequest.SuperAgent {
 	u := c.baseURL.String() + "api/" + subPath
 	h := c.client.Set("Accept", "application/json")
+
+	if c.XSRFKey != "" {
+		h.Set("Set-Cookie", xsrfCookie)
+	}
+
 	if c.UserAgent != "" {
 		h.Set("User-Agent", c.UserAgent)
 	}
