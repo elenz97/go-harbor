@@ -128,7 +128,7 @@ func (s *ProjectClient) CreateProject(p ProjectRequest) error {
 		return err[len(err)-1]
 	}
 	if resp.StatusCode != 200 {
-		return fmt.Errorf("API returned %d when deleting project", resp.StatusCode)
+		return fmt.Errorf("API returned %d when creating project", resp.StatusCode)
 	}
 	return nil
 }
