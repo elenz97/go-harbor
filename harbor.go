@@ -2,6 +2,7 @@ package harbor
 
 import (
 	"github.com/parnurzeal/gorequest"
+	"net/http"
 	"net/url"
 	"strings"
 )
@@ -96,10 +97,12 @@ func (c *Client) NewRequest(method, subPath string) *gorequest.SuperAgent {
 	u := c.baseURL.String() + "api/" + subPath
 	h := c.client.Set("Accept", "application/json")
 
+	xsrf := []*http.Cookie{{Name: "_xsrf", Value: c.XSRFKey}}
+	h.AddCookies(xsrf)
 	if c.XSRFKey != "" {
-		h.Set("Set-Cookie", "")
+		h.Set("X-Xsrftoken", xsrf[0].Value)
 	} else {
-		h.Set("Set-Cookie", c.XSRFKey)
+		h.Set("X-Xsrftoken", c.XSRFKey)
 	}
 
 	if c.UserAgent != "" {

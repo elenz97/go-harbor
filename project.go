@@ -194,7 +194,7 @@ func (s *ProjectClient) DeleteProject(pid int64) error {
 		return  err[len(err)-1]
 	}
 	if resp.StatusCode != 200 {
-		return fmt.Errorf("API returned %d when deleting repository", resp.StatusCode)
+		return fmt.Errorf("API returned %d when deleting project", resp.StatusCode)
 	}
 	return  nil
 }
