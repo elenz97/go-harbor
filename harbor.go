@@ -36,13 +36,13 @@ type ListOptions struct {
 	PageSize int `url:"page_size,omitempty" json:"page_size,omitempty"`
 }
 
-func NewClient(harborClient *gorequest.SuperAgent, baseURL, username, password string) *Client {
-	return newClient(harborClient, baseURL, username, password)
+func NewClient(harborClient *gorequest.SuperAgent, baseURL, username, password, xsrfKey string) *Client {
+	return newClient(harborClient, baseURL, username, password, xsrfKey)
 }
 
 // SetBaseURL sets the base URL for API requests to a custom endpoint. urlStr
 // should always be specified with a trailing slash.
-func (c *Client) SetBaseURL(urlStr string) error {
+func (c *Client) CheckBaseURL(urlStr string) error {
 	// Make sure the given URL end with a slash
 	if !strings.HasSuffix(urlStr, "/") {
 		urlStr += "/"
@@ -52,14 +52,27 @@ func (c *Client) SetBaseURL(urlStr string) error {
 	return err
 }
 
-func newClient(harborClient *gorequest.SuperAgent, baseURL, username, password string) *Client {
+// SetXsrfKey sets the XSRF Key for API requests
+func (c *Client) CheckXsrfKey(xsrfKey string) error {
+	var err error
+	if len(xsrfKey) > 0 {
+		return nil
+	}
+
+	return err
+}
+
+func newClient(harborClient *gorequest.SuperAgent, baseURL, username, password, xsrfKey string) *Client {
 	if harborClient == nil {
 		harborClient = gorequest.New()
 	}
 	harborClient.SetBasicAuth(username, password)
 	c := &Client{client: harborClient, UserAgent: userAgent}
-	if err := c.SetBaseURL(baseURL); err != nil {
+	if err := c.CheckBaseURL(baseURL); err != nil {
 		// Should never happen since defaultBaseURL is our constant.
+		panic(err)
+	}
+	if err := c.CheckXsrfKey(xsrfKey); err != nil {
 		panic(err)
 	}
 	// Create all the public services.
@@ -75,12 +88,14 @@ func newClient(harborClient *gorequest.SuperAgent, baseURL, username, password s
 // Relative URL paths should always be specified without a preceding slash. If
 // specified, the value pointed to by body is JSON encoded and included as the
 // request body.
-func (c *Client) NewRequest(method, subPath, xsrfCookie string) *gorequest.SuperAgent {
+func (c *Client) NewRequest(method, subPath string) *gorequest.SuperAgent {
 	u := c.baseURL.String() + "api/" + subPath
 	h := c.client.Set("Accept", "application/json")
 
 	if c.XSRFKey != "" {
-		h.Set("Set-Cookie", xsrfCookie)
+		h.Set("Set-Cookie", "")
+	} else {
+		h.Set("Set-Cookie", c.XSRFKey)
 	}
 
 	if c.UserAgent != "" {
