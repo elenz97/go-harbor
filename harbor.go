@@ -67,14 +67,18 @@ func newClient(harborClient *gorequest.SuperAgent, baseURL, username, password, 
 		harborClient = gorequest.New()
 	}
 	harborClient.SetBasicAuth(username, password)
+
 	c := &Client{client: harborClient, UserAgent: userAgent}
 	if err := c.CheckBaseURL(baseURL); err != nil {
 		// Should never happen since defaultBaseURL is our constant.
 		panic(err)
 	}
+
 	if err := c.CheckXsrfKey(xsrfKey); err != nil {
 		panic(err)
 	}
+	c.XSRFKey = xsrfKey
+
 	// Create all the public services.
 	c.Projects = &ProjectClient{client: c}
 	c.Repositories = &RepositoryClient{client: c}

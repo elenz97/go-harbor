@@ -130,13 +130,20 @@ func (s *ProjectClient) ListProject(opt *ListProjectsOptions) ([]Project, gorequ
 }
 
 // CheckProject
-// Check if the project name user provided already exist
-func (s *ProjectClient) CheckProject(projectName string) (gorequest.Response, []error) {
-	resp, _, errs := s.client.
+// Check if the project name provided already exist
+func (s *ProjectClient) CheckProject(projectName string) error {
+	resp, _, err := s.client.
 		NewRequest(gorequest.HEAD, "projects").
 		Query(fmt.Sprintf("project_name=%s", projectName)).
 		End()
-	return resp, errs
+	if err != nil {
+		return err[len(err)-1]
+	}
+	if resp.StatusCode != 200 {
+		return fmt.Errorf("API returned %d when checking project", resp.StatusCode)
+	}
+
+	return  nil
 }
 
 // CreateProject
@@ -151,7 +158,7 @@ func (s *ProjectClient) CreateProject(p ProjectRequest) error {
 		return err[len(err)-1]
 	}
 	if resp.StatusCode != 200 {
-		return fmt.Errorf("API returned %d when deleting repository", resp.StatusCode)
+		return fmt.Errorf("API returned %d when deleting project", resp.StatusCode)
 	}
 	return nil
 
