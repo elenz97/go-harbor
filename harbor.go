@@ -110,9 +110,9 @@ func (c *Client) NewRequest(method, subPath string) *gorequest.SuperAgent {
 	}
 	switch method {
 	case gorequest.PUT:
-		return c.client.Put(u).Set("Content-Type", "application/json")
+		return c.client.Put(u).Set("Content-Type", "application/json").Set("X-Xsrftoken", c.XSRFKey)
 	case gorequest.POST:
-		return c.client.Post(u).Set("Content-Type", "application/json")
+		return c.client.Post(u).Set("Content-Type", "application/json").Set("X-Xsrftoken", c.XSRFKey)
 	case gorequest.GET:
 		return c.client.Get(u)
 	case gorequest.HEAD:
