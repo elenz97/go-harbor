@@ -141,19 +141,19 @@ func (s *ProjectClient) CheckProject(projectName string) (gorequest.Response, []
 
 // CreateProject
 // Creates a new project
-func (s *ProjectClient) CreateProject(p ProjectRequest) (gorequest.Response, error) {
+func (s *ProjectClient) CreateProject(p ProjectRequest) error {
 	resp, _, err := s.client.
 		NewRequest(gorequest.POST, "projects").
 		Send(p).
 		End()
 
 	if err != nil {
-		return nil, err[len(err)-1]
+		return err[len(err)-1]
 	}
 	if resp.StatusCode != 200 {
-		return nil, fmt.Errorf("API returned %d when deleting repository", resp.StatusCode)
+		return fmt.Errorf("API returned %d when deleting repository", resp.StatusCode)
 	}
-	return resp, nil
+	return nil
 
 }
 
@@ -179,17 +179,17 @@ func (s *ProjectClient) UpdateProject(pid int64, p Project) (gorequest.Response,
 
 // DeleteProject
 // Delete a project by project ID.
-func (s *ProjectClient) DeleteProject(pid int64) (gorequest.Response, error) {
+func (s *ProjectClient) DeleteProject(pid int64) error {
 	resp, _, err := s.client.
 		NewRequest(gorequest.DELETE, fmt.Sprintf("projects/%d", pid)).
 		End()
 	if err != nil {
-		return nil, err[len(err)-1]
+		return  err[len(err)-1]
 	}
 	if resp.StatusCode != 200 {
-		return nil, fmt.Errorf("API returned %d when deleting repository", resp.StatusCode)
+		return fmt.Errorf("API returned %d when deleting repository", resp.StatusCode)
 	}
-	return resp, nil
+	return  nil
 }
 
 // GetProjectLogByID
