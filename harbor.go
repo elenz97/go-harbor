@@ -97,11 +97,9 @@ func (c *Client) NewRequest(method, subPath string) *gorequest.SuperAgent {
 	u := c.baseURL.String() + "api/" + subPath
 	h := c.client.Set("Accept", "application/json")
 
-	xsrf := []*http.Cookie{{Name: "_xsrf", Value: c.XSRFKey}}
-	h.AddCookies(xsrf)
+	xsrf := http.Cookie{Name: "_xsrf", Value: c.XSRFKey}
+
 	if c.XSRFKey != "" {
-		h.Set("X-Xsrftoken", xsrf[0].Value)
-	} else {
 		h.Set("X-Xsrftoken", c.XSRFKey)
 	}
 
@@ -110,9 +108,9 @@ func (c *Client) NewRequest(method, subPath string) *gorequest.SuperAgent {
 	}
 	switch method {
 	case gorequest.PUT:
-		return c.client.Put(u).Set("Content-Type", "application/json").Set("X-Xsrftoken", c.XSRFKey)
+		return c.client.Put(u).Set("Content-Type", "application/json").Set("X-Xsrftoken", c.XSRFKey).AddCookie(&xsrf)
 	case gorequest.POST:
-		return c.client.Post(u).Set("Content-Type", "application/json").Set("X-Xsrftoken", c.XSRFKey)
+		return c.client.Post(u).Set("Content-Type", "application/json").Set("X-Xsrftoken", c.XSRFKey).AddCookie(&xsrf)
 	case gorequest.GET:
 		return c.client.Get(u)
 	case gorequest.HEAD:

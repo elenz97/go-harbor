@@ -116,6 +116,23 @@ type MemberUser struct {
 	UserID   int    `json:"user_id"`
 }
 
+// CreateProject
+// Creates a new project
+func (s *ProjectClient) CreateProject(p ProjectRequest) error {
+	resp, _, err := s.client.
+		NewRequest(gorequest.POST, "projects").
+		Send(p).
+		End()
+
+	if err != nil {
+		return err[len(err)-1]
+	}
+	if resp.StatusCode != 200 {
+		return fmt.Errorf("API returned %d when deleting project", resp.StatusCode)
+	}
+	return nil
+}
+
 // List projects
 //
 // This endpoint returns all projects created by Harbor,
@@ -144,24 +161,6 @@ func (s *ProjectClient) CheckProject(projectName string) error {
 	}
 
 	return  nil
-}
-
-// CreateProject
-// Creates a new project
-func (s *ProjectClient) CreateProject(p ProjectRequest) error {
-	resp, _, err := s.client.
-		NewRequest(gorequest.POST, "projects").
-		Send(p).
-		End()
-
-	if err != nil {
-		return err[len(err)-1]
-	}
-	if resp.StatusCode != 200 {
-		return fmt.Errorf("API returned %d when deleting project", resp.StatusCode)
-	}
-	return nil
-
 }
 
 // GetProjectByID
